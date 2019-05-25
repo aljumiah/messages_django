@@ -10,11 +10,12 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+
 class Message(models.Model):
     content = models.TextField(blank=True, null=True)
     # profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="messages")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_messages",default=1)
 
-
     def __str__(self):
-        return  (self.user.username + " Message " + self.content)
+      
+        return "To: %s | Message:  [%s] " % (self.user.username  ,self.content)
