@@ -42,12 +42,10 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
-            'email',
         ]
 
 
 class ProfileListSerializer(serializers.ModelSerializer):
-    # user = UserSerializer()
     class Meta:
         model = Profile
         fields = ['id', 'image', ]
@@ -82,8 +80,9 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
 
 
 class ProfileSearchSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    profile = ProfileListSerializer()
 
     class Meta:
-        model = Profile
-        fields = ['id', 'user', 'image']
+        model = User
+        fields = ['id', 'username', 'first_name',
+                  'last_name', 'profile']

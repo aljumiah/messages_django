@@ -16,8 +16,8 @@ from .serializers import (
     ProfileListSerializer,
     MessageListSerializer,
     ProfileDetailSerializer,
-    ProfileSearchSerializer,
-    UserSerializer
+    UserSerializer,
+    ProfileSearchSerializer
 )
 from .permissions import IsOwner
 
@@ -50,14 +50,9 @@ class ProfileDetailView(ListAPIView):
         return Profile.objects.filter(user=self.request.user)
 
 
-class ProfileSearchView(RetrieveAPIView):
+class UserSearchView(RetrieveAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = ProfileSearchSerializer
     lookup_field = 'username'
     lookup_url_kwarg = 'username'
     permission_classes = [AllowAny]
-
-    # def get_queryset(self, request):
-    #     print(request.user)
-    #     # username = self.kwargs['username']
-    #     return Profile.objects.filter(user__username=request.user.username)

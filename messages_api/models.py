@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
     image = models.ImageField(
-        upload_to='users_profile_images', null=True, blank=True)
+        upload_to='users_profile_images', null=False, blank=False)
 
     def __str__(self):
         return self.user.username
 
 
 class Message(models.Model):
-    content = models.TextField(blank=True, null=True)
+    content = models.TextField(blank=True, null=False)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_messages", default=1)
 

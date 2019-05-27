@@ -6,7 +6,7 @@ from .views import (
     MessageCreateView,
     MessageListView,
     ProfileDetailView,
-    ProfileSearchView
+    UserSearchView
 )
 urlpatterns = [
 
@@ -14,7 +14,7 @@ urlpatterns = [
     path('register/', UserRegisterAPIView.as_view(), name='register'),
     path('profile/', ProfileDetailView.as_view(), name='profile'),
     path('user/<str:username>/',
-         ProfileSearchView.as_view(), name='user-profile'),
+         UserSearchView.as_view(), name='user-profile'),
     path('message/create/', MessageCreateView.as_view(), name='create-message'),
     path('message/list/', MessageListView.as_view(), name='list-message'),
 
