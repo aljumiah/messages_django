@@ -3,6 +3,7 @@ from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User
 from .models import Profile, Message
 
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     token = serializers.CharField(allow_blank=True, read_only=True)
@@ -11,14 +12,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'first_name',
                   'last_name', 'password', 'email', 'token']
-        
+
     def create(self, validated_data):
         username = validated_data['username']
         password = validated_data['password']
         first_name = validated_data['first_name']
         last_name = validated_data['last_name']
         email = validated_data['email']
-        new_user = User(username=username , first_name=first_name, last_name=last_name, email=email)
+        new_user = User(username=username, first_name=first_name,
+                        last_name=last_name, email=email)
         new_user.set_password(password)
         new_user.save()
 
@@ -31,6 +33,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         validated_data["token"] = token
         return validated_data
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -38,34 +41,49 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'first_name',
-            'last_name', 
-            'email',           
+            'last_name',
+            'email',
         ]
+
 
 class ProfileListSerializer(serializers.ModelSerializer):
     # user = UserSerializer()
     class Meta:
         model = Profile
-        fields = ['id','image',]
+        fields = ['id', 'image', ]
+
+
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['id','content']
+        fields = ['id', 'content']
+
 
 class MessageCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['user','content']
+        fields = ['user', 'content']
+
 
 class MessageListSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+
     class Meta:
         model = Message
-        fields = ['user','content']
+        fields = ['user', 'content']
+
 
 class ProfileDetailSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+
     class Meta:
         model = Profile
-        fields = ['id','user', 'image']
-        
+        fields = ['id', 'user', 'image']
+
+
+class ProfileSearchSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = Profile
+        fields = ['id', 'user', 'image']
