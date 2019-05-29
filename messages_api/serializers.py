@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User
-from .models import Profile, Message
+from .models import Profile, Message, Replay
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -49,7 +49,7 @@ class ProfileListSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['id', 'content']
+        fields = ['id', 'content', ]
 
 
 class MessageCreateUpdateSerializer(serializers.ModelSerializer):
@@ -58,12 +58,19 @@ class MessageCreateUpdateSerializer(serializers.ModelSerializer):
         fields = ['user', 'content']
 
 
+class ReplayAndMessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Replay
+        fields = ['replay_content']
+
+
 class MessageListSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    replied_message = ReplayAndMessageSerializer()
 
     class Meta:
         model = Message
-        fields = ['user', 'content']
+        fields = ['id', 'content', 'replied_message']
 
 
 class ProfileDetailSerializer(serializers.ModelSerializer):
@@ -81,3 +88,17 @@ class ProfileSearchSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'first_name',
                   'last_name', 'profile']
+
+
+class ReplayMessageSerializer(serializers.ModelSerializer):
+    message = MessageListSerializer()
+
+    class Meta:
+        model = Replay
+        fields = ['message', 'replay_content']
+
+
+class ReplayMessageCreateUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Replay
+        fields = ['replay_content', 'message']

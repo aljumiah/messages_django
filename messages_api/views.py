@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import Profile, Message
+from .models import Profile, Message, Replay
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.generics import (
@@ -17,7 +17,9 @@ from .serializers import (
     MessageListSerializer,
     ProfileDetailSerializer,
     UserSerializer,
-    ProfileSearchSerializer
+    ProfileSearchSerializer,
+    ReplayMessageSerializer,
+    ReplayMessageCreateUpdateSerializer
 )
 from .permissions import IsOwner
 
@@ -39,7 +41,7 @@ class MessageListView(ListAPIView):
     serializer_class = MessageListSerializer
 
     def get_queryset(self):
-        return Message.objects.filter(user=self.request.user)
+        return Message.objects.filter(user=self.request.user, replied_message__replay_content__isnull=True)
 
 
 class ProfileDetailView(ListAPIView):
@@ -56,3 +58,16 @@ class UserSearchView(RetrieveAPIView):
     lookup_field = 'username'
     lookup_url_kwarg = 'username'
     permission_classes = [AllowAny]
+
+
+class ReplayMessageView(ListAPIView):
+    serializer_class = ReplayMessageSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Replay.objects.filter(message__user__username=self.kwargs['username'])
+
+
+class CreateReplayMessageView(CreateAPIView):
+    serializer_class = ReplayMessageCreateUpdateSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
