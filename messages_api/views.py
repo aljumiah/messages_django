@@ -41,7 +41,8 @@ class MessageListView(ListAPIView):
     serializer_class = MessageListSerializer
 
     def get_queryset(self):
-        return Message.objects.filter(user=self.request.user, replied_message__replay_content__isnull=True)
+        # return Message.objects.order_by('-created_on').filter(user=self.request.user, replied_message__replay_content__isnull=True)
+        return Message.objects.order_by('-created_on', '-replied_message__created_on').filter(user=self.request.user)
 
 
 class ProfileDetailView(ListAPIView):
@@ -65,9 +66,17 @@ class ReplayMessageView(ListAPIView):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        return Replay.objects.filter(message__user__username=self.kwargs['username'])
+        return Replay.objects.order_by('-created_on').filter(message__user__username=self.kwargs['username'])
 
 
 class CreateReplayMessageView(CreateAPIView):
     serializer_class = ReplayMessageCreateUpdateSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+
+class MessageDeleteView(DestroyAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageListSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'message_id'
     permission_classes = [IsAuthenticated, IsOwner]

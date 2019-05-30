@@ -8,7 +8,8 @@ from .views import (
     ProfileDetailView,
     UserSearchView,
     ReplayMessageView,
-    CreateReplayMessageView
+    CreateReplayMessageView,
+    MessageDeleteView
 )
 urlpatterns = [
 
@@ -22,5 +23,7 @@ urlpatterns = [
     path('replay/create/', CreateReplayMessageView.as_view(), name='create-replay'),
     path('replay/list/<str:username>/',
          ReplayMessageView.as_view(), name='list-replay'),
+    path('message/delete/<int:message_id>/',
+         MessageDeleteView.as_view(), name='delete-message'),
 
 ]
