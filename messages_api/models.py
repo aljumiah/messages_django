@@ -14,6 +14,7 @@ class Profile(models.Model):
 
 class Message(models.Model):
     content = models.TextField(blank=False, null=False)
+    created_on = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_messages")
 
@@ -23,6 +24,7 @@ class Message(models.Model):
 
 class Replay(models.Model):
     replay_content = models.TextField(blank=False, null=False)
+    created_on = models.DateTimeField(auto_now_add=True)
     message = models.OneToOneField(
         Message, on_delete=models.CASCADE, null=False, blank=False, related_name="replied_message")
 
